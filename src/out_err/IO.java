@@ -86,7 +86,7 @@ public class IO {
         if (System.getProperty("os.name").contains("Windows"))
             new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
         else
-            Runtime.getRuntime().exec("clear");
+            System.out.print("\033[H\033[2J");
         } catch (IOException ex) {} catch (InterruptedException ex) {
             
         }
@@ -96,6 +96,8 @@ public class IO {
         System.out.printf(" ");
         for (int i = 0; i < len ; i++) {
             System.out.printf("-");
+            IO.sleep(2);
+
         }
         System.out.printf("\n");
     }
@@ -122,6 +124,7 @@ public class IO {
         System.out.printf(" ");
         for (int i = 0; i < len; i++) {
             System.out.printf("-");
+            IO.sleep(2);
         }
         System.out.printf("\n");   
         return len;

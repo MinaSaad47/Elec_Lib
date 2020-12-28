@@ -107,6 +107,7 @@ public class Elec_Lib {
     }
     
     private static void search() {
+        IO.clear();
         IO.menu("Search");
         IO.list("Book", "User");
         IO.prompt("Your Answer");
