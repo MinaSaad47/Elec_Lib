@@ -33,7 +33,12 @@ public class DB {
     public static ResultSet createStat(String query) {
         try {
             statement = connection.createStatement();
-            rs = statement.executeQuery(query);
+            if (query.contains("INSERT")) {
+                statement.executeUpdate(query);
+            } else {
+                rs = statement.executeQuery(query);
+            }
+            
         } catch (SQLException e){
             System.err.println(e.getMessage());
         }

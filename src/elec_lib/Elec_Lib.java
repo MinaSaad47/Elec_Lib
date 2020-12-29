@@ -2,6 +2,7 @@
 package elec_lib;
 import out_err.IO;
 import db_util.DB;
+import elec_data.Book;
 import elec_data.Person;
 import java.util.Scanner;
 
@@ -10,15 +11,13 @@ public class Elec_Lib {
     private static Scanner in = new Scanner(System.in);
     public static void main(String[] args) {
         start();
-        
     }
     
     private static void start()  {
         IO.clear();
         IO.menu("Electronic Library");
         IO.list("log in", "exit");
-        IO.prompt("your answer");
-        String ans = in.next();
+        String ans = IO.prompt("Your Answer");
         
         if (ans.equals("1")) {
             IO.clear();
@@ -37,10 +36,8 @@ public class Elec_Lib {
     
     private static void log_in() {
         IO.menu("Log In");
-        IO.prompt("Your Email");
-        String email = in.next();
-        IO.prompt("Your Password");
-        String pass = in.next();
+        String email = IO.prompt("Your Email");
+        String pass = IO.prompt("Your Password");
         Person person = login_valid(email, pass);
         IO.loading("Signing In");
         if (person != null) {
@@ -89,12 +86,11 @@ public class Elec_Lib {
     
     private static void lib_board(Person person) {
         IO.list("Search", "Add", "Remove", "Exit");
-        IO.prompt("Your Answer");
-        String ans = in.next(); 
+        String ans = IO.prompt("Your Answer");
         if (ans.equals("1")) {
             search();
         } else if (ans.equals("2")) {
-            //TODO: add();
+            add();
         } else if (ans.equals("3")) {
             //TODO: remove();
         } else if (ans.equals("4")) {
@@ -110,44 +106,51 @@ public class Elec_Lib {
         IO.clear();
         IO.menu("Search");
         IO.list("Book", "User");
-        IO.prompt("Your Answer");
-        String ans = in.next();
+        String ans = IO.prompt("Your Answer");
         if (ans.equals("1")) {
-            IO.prompt("A Book Name");
-            String name = in.next();
-            search_book(name);
+            String name = IO.prompt("A Book Name");
+            Book.search(name);
         } else if (ans.equals("2")) {
-            
-            
+            String name = IO.prompt("An User name");
+            Person.search(name);            
         } else {
             IO.error("Invalid Answer");
             search();
         }
     }
     
-    private static void search_book(String name) {
-        DB.connect();
-        DB.createStat("SELECT * FROM book");
-        IO.rowContent("03502005", "ID", "Name", "Author", "Date");
-        boolean dataFound = false;
-        while(DB.shift()) {
-            if (DB.getString("name").contains(name)) {
-                dataFound = true;
-                IO.row("03502005", 
-                    DB.getString("id"), DB.getString("name"),
-                    DB.getString("author"), DB.getString("release_date"));
-            }
-        }
-        if (!dataFound) {
-            IO.error("No Data Found");
-            IO.sleep(2000);
-            IO.clear();
+    
+    
+    private static void add() {
+        IO.clear();
+        IO.menu("Add Menu");
+        IO.list("Book", "User");
+        String ans = IO.prompt("Your Answer");
+        if (ans.equals("1")) {
+            Book book = new Book();
+            book.setName(IO.prompt("Name"));
+            book.setAuthor(IO.prompt("Author"));
+            book.setReleaseDate(IO.prompt("Release Date"));
+            Book.add(book);
+            IO.loading("Adding Book");
             return;
-        } 
-        
-        IO.prompt("An ID To Select");
-        String ans = in.next();
-        //TODO: operations
+        } else if (ans.equals("2")) {
+            Person person = new Person();
+            person.setFirstName(IO.prompt("First Name"));
+            person.setLastName(IO.prompt("Last Name"));
+            person.setEmail(IO.prompt("Email"));
+            person.setPassword(IO.prompt("Password"));
+            person.setAddress(IO.prompt("Address"));
+            person.setCellPhone(IO.prompt("Cell Phone"));
+            person.setType(IO.prompt("Type"));
+            Person.add(person);
+            IO.loading("Adding Person");
+            return;
+        } else {
+            IO.error("Invalid Answer");
+            IO.sleep(2000);
+            add();
+        }
     }
     
     

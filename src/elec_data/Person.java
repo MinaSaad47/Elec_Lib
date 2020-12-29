@@ -1,10 +1,11 @@
 
 package elec_data;
 
+import db_util.DB;
 import out_err.IO;
 
 public class Person {
-    int id;
+    int id;;
     private String firstName, lastName, email, password, address, cellPhone, type;
     boolean isBlocked;
 
@@ -19,6 +20,7 @@ public class Person {
         this.type = type;
         this.isBlocked = isBlocked;
     }
+    public Person() {};
 
     
     
@@ -90,7 +92,7 @@ public class Person {
         return type;
     }
 
-    public boolean isIsBlocked() {
+    public boolean getIsBlocked() {
         return isBlocked;
     }
     
@@ -99,6 +101,46 @@ public class Person {
                String.valueOf(id), firstName, lastName, email, address, cellPhone, String.valueOf(isBlocked), type);
     }
     
+    public static void search(String name) {
+        DB.connect();
+        DB.createStat("SELECT * FROM person");
+        IO.rowContent("0310102525150710", "ID", "Frist_Name", "Last_Name",
+                "Email", "Address", "Cell_Phone", "1"
+                        + "", "Type");
+        
+        DB.createStat("SELECT * FROM person");
+        boolean dataFound = false;
+        Person person = new Person();
+        while(DB.shift()) {
+            if (DB.getString("first_name").contains(name) || DB.getString("last_name").contains(name)) {
+                dataFound = true;
+                person = new Person(Integer.parseInt(DB.getString("id")),
+                DB.getString("first_name"), DB.getString("last_name"),
+                DB.getString("email"), DB.getString("password"), DB.getString("address"),
+                DB.getString("cell_phone"), DB.getBoolean("is_blocked"), DB.getString("type"));
+                person.displayInfo();
+            }
+        }
+        DB.disconnect();
+        if (!dataFound) {
+            IO.error("No Data Found");
+            IO.sleep(2000);
+            IO.clear();
+            return;
+        }
+    }
+    
+    public static void add(Person person) {
+        person.setId(0);
+        person.setIsBlocked(false);
+        DB.connect();
+        String query = "INSERT INTO person VALUES ( '" + String.valueOf(person.getId()) + "', '" +
+                person.getFirstName()+ "', '" + person.getLastName()+ "', '" + person.getEmail()+ 
+                "', '" + person.getPassword() + "', '" + person.getAddress() +"', '" + person.getCellPhone() +
+                "', '" + person.getIsBlocked() + "', '" + person.getType() + "' )";
+        DB.createStat(query);
+        DB.disconnect();
+    }
     
     
     

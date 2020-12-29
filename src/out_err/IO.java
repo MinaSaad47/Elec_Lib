@@ -2,9 +2,10 @@
 package out_err;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class IO {
-    
+    private static Scanner in = new Scanner(System.in);
     
     public static void list(String... list) {
         for (int i = 0; i < list.length ; i++) {
@@ -19,8 +20,10 @@ public class IO {
         block(str, 5);  
     }
     
-    public static void prompt(String str) {
+    public static String prompt(String str) {
         System.out.printf("\tEnter %s: ", str);
+        String input = in.nextLine();
+        return input;
     }
 
     public static void menu(String str) {
