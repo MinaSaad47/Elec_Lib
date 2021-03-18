@@ -2,4 +2,4 @@
 
 ## A stupid University project
 
-### Don't Wast Your Time Here !!!
+### Don't Waste Your Time Here !!!
